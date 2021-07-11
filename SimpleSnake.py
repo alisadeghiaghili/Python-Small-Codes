@@ -1,9 +1,12 @@
 import random
 import curses
+import locale
 
-screenSize = curses.initscr()
+locale.setlocale(locale.LC_ALL, '')
+
+screen = curses.initscr()
 curses.curs_set(0)
-win_height, win_width = screenSize.getmaxyx()
+win_height, win_width = screen.getmaxyx()
 window = curses.newwin(win_height, win_width, 0, 0)
 window.keypad(1)
 window.timeout(100)
@@ -20,13 +23,13 @@ window.addch(int(food[0]), int(food[1]), '0')#curses.ACS_PI)
 key = curses.KEY_RIGHT
 score = 0
 
-addstr(0,0, score)
-
 while True:
-    next_key = window.getch()
-    key = key if next_key == -1 else next_key
+	window.addstr(0, 0, "Score: " + str(score))
 
-    if snake[0][0] in [0, win_height] or snake[0][1]  in [0, win_width] or snake[0] in snake[1:]:
+	next_key = window.getch()
+	key = key if next_key == -1 else next_key
+
+	if snake[0][0] in [0, win_height] or snake[0][1]  in [0, win_width] or snake[0] in snake[1:]:
         curses.endwin()
         quit()
 
@@ -45,7 +48,7 @@ while True:
 
     if snake[0] == food:
         food = None
-    	  score = score + 1
+        score += 1
         while food is None:
             new_food = [
                 random.randint(1, win_height-1),
